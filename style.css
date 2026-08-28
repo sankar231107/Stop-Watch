@@ -1,0 +1,781 @@
+/* ==========================================================================
+   TimePro - Advanced Stopwatch & Precision Timer CSS Design System
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Theme Variables & Color Tokens
+   -------------------------------------------------------------------------- */
+   :root {
+    /* Font Families */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace, monospace;
+
+    /* Transition Speeds */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+}
+
+/* Dark Theme (Default) */
+html[data-theme="dark"] {
+    --bg-page: #0b0f19;
+    --bg-gradient: radial-gradient(circle at 50% 0%, #1a233a 0%, #080c14 100%);
+    --card-bg: rgba(17, 24, 39, 0.75);
+    --card-border: rgba(59, 130, 246, 0.2);
+    --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.1);
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    
+    --accent-primary: #3b82f6;
+    --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    --accent-glow: rgba(59, 130, 246, 0.4);
+
+    --btn-primary-bg: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    --btn-primary-hover: linear-gradient(135deg, #60a5fa 0%, #1d4ed8 100%);
+    --btn-primary-text: #ffffff;
+    
+    --btn-secondary-bg: rgba(255, 255, 255, 0.06);
+    --btn-secondary-border: rgba(255, 255, 255, 0.12);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.12);
+
+    --dial-bg: rgba(255, 255, 255, 0.04);
+    --dial-progress: #3b82f6;
+    
+    --badge-bg: rgba(59, 130, 246, 0.15);
+    --badge-text: #60a5fa;
+
+    --table-header: rgba(59, 130, 246, 0.1);
+    --table-row-hover: rgba(255, 255, 255, 0.03);
+    
+    --color-fastest: #10b981;
+    --color-slowest: #f43f5e;
+}
+
+/* Light Theme */
+html[data-theme="light"] {
+    --bg-page: #f8fafc;
+    --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #e2e8f0 100%);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: rgba(203, 213, 225, 0.8);
+    --card-shadow: 0 20px 40px rgba(148, 163, 184, 0.2);
+    
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    
+    --accent-primary: #2563eb;
+    --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    --accent-glow: rgba(37, 99, 235, 0.25);
+
+    --btn-primary-bg: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    --btn-primary-hover: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    --btn-primary-text: #ffffff;
+    
+    --btn-secondary-bg: #e2e8f0;
+    --btn-secondary-border: #cbd5e1;
+    --btn-secondary-hover: #cbd5e1;
+
+    --dial-bg: rgba(0, 0, 0, 0.04);
+    --dial-progress: #2563eb;
+    
+    --badge-bg: rgba(37, 99, 235, 0.1);
+    --badge-text: #1d4ed8;
+
+    --table-header: #e2e8f0;
+    --table-row-hover: #f1f5f9;
+
+    --color-fastest: #059669;
+    --color-slowest: #dc2626;
+}
+
+/* --------------------------------------------------------------------------
+   Reset & Global Base Styles
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-page);
+    background-image: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Main Layout & Glass Card Container
+   -------------------------------------------------------------------------- */
+.app-container {
+    width: 100%;
+    max-width: 640px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    transition: background var(--transition-normal), border-color var(--transition-normal);
+}
+
+/* --------------------------------------------------------------------------
+   Header & Controls
+   -------------------------------------------------------------------------- */
+.app-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--accent-gradient);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.brand-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.brand-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.brand-title .highlight {
+    color: var(--accent-primary);
+}
+
+/* Navigation Modes */
+.mode-nav {
+    display: flex;
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    border-radius: var(--radius-full);
+    padding: 4px;
+    gap: 2px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all var(--transition-fast);
+}
+
+.nav-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.nav-btn:hover {
+    color: var(--text-main);
+}
+
+.nav-btn.active {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+/* Header Utilities */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.icon-btn:hover {
+    background: var(--btn-secondary-hover);
+}
+
+.icon-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   View Sections & Circular Dial
+   -------------------------------------------------------------------------- */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.view-section {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+.view-section.active {
+    display: flex;
+}
+
+/* Circular Dial Container */
+.timer-dial-container {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dial-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.dial-bg {
+    fill: none;
+    stroke: var(--dial-bg);
+    stroke-width: 10;
+}
+
+.dial-progress {
+    fill: none;
+    stroke: var(--dial-progress);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 848; /* 2 * PI * 135 */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.1s linear, stroke var(--transition-normal);
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+.dial-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Status Badge */
+.status-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    text-transform: uppercase;
+}
+
+/* Main Digital Time Display */
+.main-time-display {
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text-main);
+    display: flex;
+    align-items: baseline;
+}
+
+.main-time-display .colon {
+    opacity: 0.7;
+    margin: 0 1px;
+}
+
+.main-time-display .millis-part {
+    font-size: 1.25rem;
+    opacity: 0.75;
+    margin-left: 2px;
+    color: var(--accent-primary);
+}
+
+.sub-time-display {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Control Buttons
+   -------------------------------------------------------------------------- */
+.controls-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.btn {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all var(--transition-fast);
+}
+
+.btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-primary {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    box-shadow: 0 8px 20px var(--accent-glow);
+    min-width: 140px;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px var(--accent-glow);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--text-main);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--btn-secondary-hover);
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-running {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4) !important;
+    color: #ffffff !important;
+}
+
+/* --------------------------------------------------------------------------
+   Timer Specific Elements
+   -------------------------------------------------------------------------- */
+.timer-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.input-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-unit input {
+    width: 60px;
+    height: 54px;
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+}
+
+.input-unit input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.input-unit label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.timer-presets {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.preset-btn {
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.preset-btn:hover {
+    color: var(--text-main);
+    border-color: var(--accent-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Digital Clock Card
+   -------------------------------------------------------------------------- */
+.clock-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 0;
+}
+
+.clock-time-display {
+    font-family: var(--font-mono);
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.clock-time-display .ampm {
+    font-size: 1.25rem;
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.clock-date {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.clock-timezone {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Laps & Analytics Panel
+   -------------------------------------------------------------------------- */
+.laps-panel {
+    border-top: 1px solid var(--card-border);
+    padding-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.panel-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-title svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-primary);
+}
+
+.panel-title h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.panel-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-sm {
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--transition-fast);
+}
+
+.btn-sm svg {
+    width: 14px;
+    height: 14px;
+}
+
+.btn-sm:hover:not(:disabled) {
+    background: var(--btn-secondary-hover);
+}
+
+.btn-sm:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+/* Stats Bar */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.stat-card {
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.stat-value {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.stat-fastest .stat-value {
+    color: var(--color-fastest);
+}
+
+.stat-slowest .stat-value {
+    color: var(--color-slowest);
+}
+
+/* Table Container */
+.table-container {
+    max-height: 220px;
+    overflow-y: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--btn-secondary-border);
+}
+
+/* Custom Scrollbar */
+.table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--btn-secondary-border);
+    border-radius: var(--radius-full);
+}
+
+.laps-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.laps-table th {
+    background: var(--table-header);
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.laps-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--btn-secondary-border);
+    font-family: var(--font-mono);
+}
+
+.laps-table tr:hover:not(.empty-row) {
+    background: var(--table-row-hover);
+}
+
+.empty-row td {
+    text-align: center;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    padding: 30px 16px;
+}
+
+/* Row Badges */
+.badge-fastest {
+    color: var(--color-fastest);
+    font-weight: 700;
+}
+
+.badge-slowest {
+    color: var(--color-slowest);
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Footer & Keyboard Shortcuts
+   -------------------------------------------------------------------------- */
+.app-footer {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--card-border);
+    padding-top: 16px;
+}
+
+.shortcuts-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.key-badge {
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 580px) {
+    .app-container {
+        padding: 20px 16px;
+    }
+
+    .app-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main-time-display {
+        font-size: 2.1rem;
+    }
+
+    .clock-time-display {
+        font-size: 2.6rem;
+    }
+}
